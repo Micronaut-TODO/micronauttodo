@@ -1,0 +1,19 @@
+name: GraalVM NativeTest
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1.2.3
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+      - name: Echo native Image versions
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+          native-image --version
+      - name: Native Tests
+        run: ./gradlew nativeTest
