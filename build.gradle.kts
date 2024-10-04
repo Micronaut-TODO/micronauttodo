@@ -122,5 +122,7 @@ ossIndexAudit {
     username = project.properties["ossIndexUsername"].toString()
     password = project.properties["ossIndexPassword"].toString()
 }
-
+tasks.named("build") {
+    dependsOn(tasks.ossIndexAudit)
+}
 
