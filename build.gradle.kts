@@ -40,6 +40,12 @@ dependencies {
     testImplementation("io.micronaut:micronaut-http-client")
 }
 
+configurations.all {
+    resolutionStrategy {
+        // mysql-connector-j depends on a vulnerable version of protobuf
+        force("com.google.protobuf:protobuf-java:4.28.2")
+    }
+}
 
 application {
     mainClass = "com.micronauttodo.Application"
