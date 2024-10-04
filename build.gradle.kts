@@ -4,6 +4,7 @@ plugins {
     id("gg.jte.gradle") version "3.1.12"
     id("io.micronaut.test-resources") version "4.4.3"
     id("io.micronaut.aot") version "4.4.3"
+    id("org.sonatype.gradle.plugins.scan") version "2.8.3"
     jacoco
 }
 
@@ -109,6 +110,11 @@ tasks.jacocoTestCoverageVerification {
 
 tasks.check {
     dependsOn(tasks.jacocoTestCoverageVerification)
+}
+
+ossIndexAudit {
+    username = project.properties["ossIndexUsername"].toString()
+    password = project.properties["ossIndexPassword"].toString()
 }
 
 
