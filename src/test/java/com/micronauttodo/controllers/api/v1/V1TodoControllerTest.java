@@ -1,7 +1,5 @@
 package com.micronauttodo.controllers.api.v1;
 
-import com.micronauttodo.XAuthTokenAuthenticationFetcher;
-import com.micronauttodo.XAuthTokenUtils;
 import com.micronauttodo.domains.Todo;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.core.type.Argument;
@@ -20,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static com.micronauttodo.XAuthTokenUtils.*;
+import static com.micronauttodo.utils.XAuthTokenUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Property(name = "micronaut.security.reject-not-found", value = StringUtils.FALSE)

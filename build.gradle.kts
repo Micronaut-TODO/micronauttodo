@@ -38,6 +38,8 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("io.micronaut:micronaut-http-client")
+
+    jteGenerate("gg.jte:jte-native-resources:3.1.12")
 }
 
 configurations.all {
@@ -78,14 +80,10 @@ micronaut {
     }
 }
 
-
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-    jdkVersion = "21"
-}
-
 jte {
     sourceDirectory = file("src/main/jte").toPath()
     generate()
+    jteExtension("gg.jte.nativeimage.NativeResourcesExtension")
 }
 
 // Gradle requires that generateJte is run before some tasks
