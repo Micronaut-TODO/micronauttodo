@@ -1,9 +1,8 @@
 package com.micronauttodo.controllers;
 
 import com.micronauttodo.controllers.api.v1.Api;
-import com.micronauttodo.entities.TodoEntity;
-import com.micronauttodo.mappers.TodoMappers;
-import com.micronauttodo.repositories.TodoCrudRepository;
+import com.micronauttodo.domains.Todo;
+import com.micronauttodo.repositories.TodoRepository;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -28,13 +27,10 @@ class TodoController {
     public static final String FIELD_ID = "id";
     public static final String MODEL_TODO = "todo";
     public static final String VIEW_TODO_TODO_LIST_GROUP_ITEM = "todo/todoListGroupItem";
-    private final TodoCrudRepository todoCrudRepository;
-    private final TodoMappers todoMappers;
+    private final TodoRepository todoRepository;
 
-    TodoController(TodoCrudRepository todoCrudRepository,
-                   TodoMappers todoMappers) {
-        this.todoCrudRepository = todoCrudRepository;
-        this.todoMappers = todoMappers;
+    TodoController(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
     }
 
     @Hidden
@@ -42,7 +38,7 @@ class TodoController {
     @Get(Api.PATH_LIST)
     @View("todo/list")
     Map<String, Object> list() {
-        return Map.of(MODEL_TODOS, todoCrudRepository.findAll().stream().map(todoMappers::fromEntity).toList());
+        return Map.of(MODEL_TODOS, todoRepository.findAll());
     }
 
     @Hidden
@@ -50,9 +46,12 @@ class TodoController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Post(Api.PATH_SAVE)
     HttpResponse<?> save(@Body(FIELD_ITEM) String item, HttpRequest<?> request) {
-        TodoEntity entity = todoCrudRepository.save(new TodoEntity(null, item, null));
+        Todo todo = todoRepository.save(item);
         return TurboMediaType.acceptsTurboStream(request)
-                ? HttpResponse.ok(TurboStream.builder().targetDomId("todoList").template(VIEW_TODO_TODO_LIST_GROUP_ITEM, Map.of(MODEL_TODO, todoMappers.fromEntity(entity))).append())
+                ? HttpResponse.ok(TurboStream.builder()
+                        .targetDomId("todoList")
+                        .template(VIEW_TODO_TODO_LIST_GROUP_ITEM, Map.of(MODEL_TODO, todo))
+                        .append()).contentType(TurboMediaType.TURBO_STREAM_TYPE)
                 : HttpResponse.seeOther(URI_TODO_LIST);
     }
 
@@ -61,9 +60,11 @@ class TodoController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Post(Api.PATH_DELETE)
     HttpResponse<?> save(@Body(FIELD_ID) Long id, HttpRequest<?> request) {
-        todoCrudRepository.deleteById(id);
+        todoRepository.deleteById(id);
         return TurboMediaType.acceptsTurboStream(request)
-                ? HttpResponse.ok(TurboStream.builder().targetDomId("todo" + id).remove())
+                ? HttpResponse.ok(TurboStream.builder()
+                        .targetDomId("todo" + id)
+                        .remove()).contentType(TurboMediaType.TURBO_STREAM_TYPE)
                 : HttpResponse.seeOther(URI_TODO_LIST);
     }
 }

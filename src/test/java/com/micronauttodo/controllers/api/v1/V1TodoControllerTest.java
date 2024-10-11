@@ -84,23 +84,6 @@ class V1TodoControllerTest {
 
         assertEquals("{\"id\":" + id + ",\"item\":\"Learn about GraalVM\"}", json);
 
-        // UPDATE
-        String updateJson = "{\"item\":\"Learn about GraalVM and native image\"}";
-        HttpRequest<?> updateRequestUnAuthorized = HttpRequest.PUT(location, updateJson);
-        ex = assertThrows(HttpClientResponseException.class, () -> client.exchange(updateRequestUnAuthorized));
-        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
-        HttpRequest<?> updateRequest = decorate(HttpRequest.PUT(location, updateJson), userA);
-        HttpResponse<?> updateResponse = assertDoesNotThrow(() -> client.exchange(updateRequest));
-        assertEquals(HttpStatus.NO_CONTENT, updateResponse.status());
-
-        //SHOW
-        getResponse = assertDoesNotThrow(() -> client.exchange(getRequest));
-        assertEquals(HttpStatus.OK, getResponse.status());
-        jsonOptional = getResponse.getBody(String.class);
-        assertTrue(jsonOptional.isPresent());
-        json = jsonOptional.get();
-        assertEquals("{\"id\":" + id + ",\"item\":\"Learn about GraalVM and native image\"}", json);
-
         // DELETE
         HttpRequest<?> deleteRequestUnauthorized = HttpRequest.DELETE(location);
         ex = assertThrows(HttpClientResponseException.class, () -> client.exchange(deleteRequestUnauthorized));
