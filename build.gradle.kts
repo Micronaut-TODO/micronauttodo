@@ -16,30 +16,47 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
-    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+
+    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    implementation("io.micronaut.validation:micronaut-validation")
+
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    implementation("io.micronaut.data:micronaut-data-jdbc")
-    implementation("io.micronaut.security:micronaut-security")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
+
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+    implementation("io.micronaut.security:micronaut-security")
+    implementation("io.micronaut.security:micronaut-security-session")
+
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+
+    implementation("io.micronaut.flyway:micronaut-flyway")
+    runtimeOnly("org.flywaydb:flyway-mysql")
+
     implementation("io.micronaut.views:micronaut-views-fieldset")
     implementation("io.micronaut.views:micronaut-views-jte")
 
     implementation("io.micronaut.multitenancy:micronaut-multitenancy")
 
-    implementation("io.micronaut.flyway:micronaut-flyway")
-    runtimeOnly("org.flywaydb:flyway-mysql")
-
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.mysql:mysql-connector-j")
-    testImplementation("io.micronaut:micronaut-http-client")
+
+    // database authentication
+    implementation("org.springframework.security:spring-security-crypto:6.2.0")
+    implementation("org.slf4j:jcl-over-slf4j")
 
     jteGenerate("gg.jte:jte-native-resources:3.1.12")
+
+    testImplementation("io.micronaut:micronaut-http-client")
+
+
 }
 
 configurations.all {

@@ -28,9 +28,9 @@ class BootstrapTest {
     @Test
     void testBootstrap(@Client("/") HttpClient httpClient) {
         BlockingHttpClient client = httpClient.toBlocking();
-        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.2/bootstrap.css")));
-        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.2/bootstrap.css.map")));
-        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.2/bootstrap.min.css")));
-        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.2/bootstrap.min.css.map")));
+        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.3-dist/bootstrap.css")));
+        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.3-dist/bootstrap.css.map")));
+        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.3-dist/bootstrap.min.css")));
+        assertDoesNotThrow(() -> client.exchange(HttpRequest.GET("/assets/stylesheets/bootstrap-5.3.3-dist/bootstrap.min.css.map")));
     }
 }

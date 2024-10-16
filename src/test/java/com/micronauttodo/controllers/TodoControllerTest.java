@@ -6,6 +6,8 @@ import com.micronauttodo.TurboRequest;
 import com.micronauttodo.entities.TodoEntity;
 import com.micronauttodo.repositories.TodoCrudRepository;
 import com.micronauttodo.utils.XAuthTokenUtils;
+import io.micronaut.context.annotation.Property;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
@@ -21,6 +23,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Property(name = "micronaut.security.csrf.filter.enabled", value = StringUtils.FALSE)
 @MicronautTest(transactional = false)
 class TodoControllerTest {
     private static final Logger LOG = LoggerFactory.getLogger(TodoControllerTest.class);

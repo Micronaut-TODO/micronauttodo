@@ -1,6 +1,7 @@
 package com.micronauttodo.controllers;
 
 import com.micronauttodo.controllers.api.v1.Api;
+import com.micronauttodo.controllers.locale.LocaleFormGeneration;
 import com.micronauttodo.domains.Todo;
 import com.micronauttodo.repositories.TodoRepository;
 import io.micronaut.http.HttpRequest;
@@ -11,6 +12,7 @@ import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.views.View;
+import io.micronaut.views.fields.*;
 import io.micronaut.views.turbo.TurboStream;
 import io.micronaut.views.turbo.http.TurboMediaType;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -37,7 +39,7 @@ class TodoController {
     @Produces(MediaType.TEXT_HTML)
     @Get(Api.PATH_LIST)
     @View("todo/list")
-    Map<String, Object> list() {
+    Map<String, Object> list(HttpRequest<?> request) {
         return Map.of(MODEL_TODOS, todoRepository.findAll());
     }
 
