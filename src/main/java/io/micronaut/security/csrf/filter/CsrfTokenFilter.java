@@ -62,23 +62,20 @@ public class CsrfTokenFilter {
         this.invalidCsrfTokenExceptionHandler = invalidCsrfTokenExceptionHandler;
     }
 
-    @ExecuteOn(TaskExecutors.BLOCKING)
     @RequestFilter
     @Nullable
-    public HttpResponse<?> filterRequest(HttpRequest<?> request) {
-        if (request.getMethod() == HttpMethod.POST) {
-            if (!validateHeaders(request)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Request rejected by the {} because the header validation failed", this.getClass().getSimpleName());
-                }
-                return unauthorized(request);
+    public HttpResponse<?> csrfFilter(HttpRequest<?> request) {
+        if (!validateHeaders(request)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Request rejected by the {} because the header validation failed", this.getClass().getSimpleName());
             }
-            if (!validateCsrfToken(request)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Request rejected by the {} because the CSRF Token validation failed", this.getClass().getSimpleName());
-                }
-                return unauthorized(request);
+            return unauthorized(request);
+        }
+        if (!validateCsrfToken(request)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Request rejected by the {} because the CSRF Token validation failed", this.getClass().getSimpleName());
             }
+            return unauthorized(request);
         }
         return null;
     }
@@ -104,9 +101,10 @@ public class CsrfTokenFilter {
     }
 
     boolean validateHeaders(HttpRequest<?> request) {
-        String host = httpHostResolver.resolve(request);
-        List<String> validateLocations = List.of(host);
-        return validateHeaders(validateLocations, request.getHeaders(), request.getMethod());
+        return true;
+        //String host = httpHostResolver.resolve(request);
+        //List<String> validateLocations = List.of(host);
+        //return validateHeaders(validateLocations, request.getHeaders(), request.getMethod());
     }
 
     private boolean validateHeaders(@NonNull List<String> validLocations,

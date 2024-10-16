@@ -1,5 +1,6 @@
 package com.micronauttodo.utils;
 
+import com.micronauttodo.MicronautIntegrationTest;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;

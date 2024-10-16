@@ -1,5 +1,7 @@
 package com.micronauttodo.security.dbauth;
 
+import com.micronauttodo.MicronautIntegrationTest;
+import com.micronauttodo.MicronautTestNoPersistence;
 import io.micronaut.core.type.Argument;
 import io.micronaut.serde.SerdeIntrospections;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -11,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class LoginFormTest {
     public static final String EMAIL = "manolo@example.com";
 

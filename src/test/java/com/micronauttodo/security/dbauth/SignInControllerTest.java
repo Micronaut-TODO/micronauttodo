@@ -1,6 +1,7 @@
 package com.micronauttodo.security.dbauth;
 
 import com.micronauttodo.BrowserRequest;
+import com.micronauttodo.MicronautTestNoPersistence;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest
+@MicronautTestNoPersistence
 class SignInControllerTest {
 
     @Test

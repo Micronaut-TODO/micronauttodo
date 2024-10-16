@@ -1,6 +1,7 @@
 package com.micronauttodo.controllers;
 
 import com.micronauttodo.BrowserRequest;
+import com.micronauttodo.MicronautTestNoPersistence;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Property(name = "micronaut.http.client.follow-redirects", value = StringUtils.FALSE)
-@MicronautTest
+@MicronautTestNoPersistence
 class HomeControllerTest {
 
     @Inject

@@ -17,6 +17,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.URI;
 import java.util.Map;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Property(name = "micronaut.security.csrf.filter.enabled", value = StringUtils.FALSE)
+@Testcontainers(disabledWithoutDocker = true)
 @MicronautTest(transactional = false)
 class TodoControllerTest {
     private static final Logger LOG = LoggerFactory.getLogger(TodoControllerTest.class);

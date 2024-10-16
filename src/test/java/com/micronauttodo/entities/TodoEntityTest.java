@@ -1,5 +1,6 @@
 package com.micronauttodo.entities;
 
+import com.micronauttodo.MicronautIntegrationTest;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.validation.Validator;
@@ -7,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class TodoEntityTest {
     @Inject
     Validator validator;

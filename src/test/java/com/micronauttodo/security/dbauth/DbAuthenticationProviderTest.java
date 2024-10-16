@@ -4,9 +4,11 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Testcontainers(disabledWithoutDocker = true)
 @MicronautTest(startApplication = false, transactional = false)
 class DbAuthenticationProviderTest {
 

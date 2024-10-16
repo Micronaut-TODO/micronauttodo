@@ -41,6 +41,8 @@ dependencies {
     implementation("io.micronaut.views:micronaut-views-fieldset")
     implementation("io.micronaut.views:micronaut-views-jte")
 
+    testImplementation("org.testcontainers:junit-jupiter")
+
     implementation("io.micronaut.multitenancy:micronaut-multitenancy")
 
     compileOnly("io.micronaut:micronaut-http-client")

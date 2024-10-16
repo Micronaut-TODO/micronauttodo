@@ -1,5 +1,6 @@
 package com.micronauttodo.openapi;
 
+import com.micronauttodo.MicronautTestNoPersistence;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest
+@MicronautTestNoPersistence
 class OpenApiTest {
     @Test
     void openApiIsGenerated(@Client("/") HttpClient httpClient) {

@@ -1,5 +1,6 @@
 package com.micronauttodo.i18n;
 
+import com.micronauttodo.MicronautIntegrationTest;
 import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class PropertiesKeysLocalizedInEveryLanguageTest {
     @Test
     void keysAreLocalized(ResourceLoader resourceLoader) throws IOException {

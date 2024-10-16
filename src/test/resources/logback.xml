@@ -12,4 +12,6 @@
         <appender-ref ref="STDOUT" />
     </root>
     <logger name="com.micronauttodo" level="TRACE"/>
+    <logger name="io.micronaut.http.server.cors" level="TRACE"/>
+
 </configuration>

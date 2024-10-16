@@ -1,5 +1,6 @@
 package com.micronauttodo.i18n;
 
+import com.micronauttodo.MicronautIntegrationTest;
 import io.micronaut.context.MessageSource;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class MessageSourceFactoryTest {
     @Test
     void messageSource(MessageSource messageSource) {

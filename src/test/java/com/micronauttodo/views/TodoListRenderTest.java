@@ -2,6 +2,7 @@ package com.micronauttodo.views;
 
 import com.micronauttodo.AssertionUtils;
 import com.micronauttodo.EmptyLocalizedMessageSource;
+import com.micronauttodo.MicronautIntegrationTest;
 import com.micronauttodo.controllers.locale.LocaleForm;
 import com.micronauttodo.domains.Todo;
 import io.micronaut.context.LocalizedMessageSource;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class TodoListRenderTest {
     private static final Logger LOG = LoggerFactory.getLogger(TodoListRenderTest.class);
     @Inject

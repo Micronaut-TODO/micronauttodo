@@ -14,6 +14,7 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Property(name = "micronaut.security.reject-not-found", value = StringUtils.FALSE)
 @Property(name = "spec.name", value = "V1TodoControllerTest")
+@Testcontainers(disabledWithoutDocker = true)
 @MicronautTest
 class V1TodoControllerTest {
     @Test

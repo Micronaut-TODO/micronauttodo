@@ -14,6 +14,7 @@
 
 package com.micronauttodo.assets;
 
+import com.micronauttodo.MicronautTestNoPersistence;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
@@ -23,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@MicronautTest
+@MicronautTestNoPersistence
 class BootstrapTest {
     @Test
     void testBootstrap(@Client("/") HttpClient httpClient) {

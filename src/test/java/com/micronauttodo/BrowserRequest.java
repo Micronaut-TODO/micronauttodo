@@ -28,7 +28,7 @@ public final class BrowserRequest {
         MutableHttpRequest<T> request = HttpRequestFactory.INSTANCE.post(uri, body)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.TEXT_HTML);
-        return decorateWithReferer(decorateWithHost(request, embeddedServer), embeddedServer);
+        return decorateWithReferer(decorateWithOrigin(request, embeddedServer), embeddedServer);
     }
 
     public static <T> MutableHttpRequest<T> POST(String uri, T body) {
@@ -42,13 +42,13 @@ public final class BrowserRequest {
     public static MutableHttpRequest<?> GET(String uri, @Nullable EmbeddedServer embeddedServer) {
         MutableHttpRequest<?> request = HttpRequestFactory.INSTANCE.get(uri)
                 .accept(MediaType.TEXT_HTML);
-        return decorateWithReferer(decorateWithHost(request, embeddedServer), embeddedServer);
+        return decorateWithReferer(decorateWithOrigin(request, embeddedServer), embeddedServer);
     }
 
-    private static <T> MutableHttpRequest<T> decorateWithHost(MutableHttpRequest<T> request,
+    private static <T> MutableHttpRequest<T> decorateWithOrigin(MutableHttpRequest<T> request,
                                                           @Nullable EmbeddedServer embeddedServer) {
         if (embeddedServer != null) {
-            return request.header(HttpHeaders.HOST, embeddedServer.getHost() + ":" + embeddedServer.getPort());
+            //return request.header(HttpHeaders.ORIGIN, embeddedServer.getHost());
         }
         return request;
     }
@@ -56,7 +56,7 @@ public final class BrowserRequest {
     private static <T> MutableHttpRequest<T> decorateWithReferer(MutableHttpRequest<T> request,
                                                               @Nullable EmbeddedServer embeddedServer) {
         if (embeddedServer != null) {
-            return request.header(HttpHeaders.REFERER, embeddedServer.getURL().toString());
+            //return request.header(HttpHeaders.REFERER, embeddedServer.getURL().toString());
         }
         return request;
     }

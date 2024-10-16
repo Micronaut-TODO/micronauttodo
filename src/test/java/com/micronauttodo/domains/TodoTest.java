@@ -1,13 +1,13 @@
 package com.micronauttodo.domains;
 
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import com.micronauttodo.MicronautIntegrationTest;
 import jakarta.inject.Inject;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class TodoTest {
     @Inject
     Validator validator;

@@ -1,5 +1,6 @@
 package com.micronauttodo.security;
 
+import com.micronauttodo.MicronautIntegrationTest;
 import io.micronaut.security.csrf.conf.CsrfFilterConfiguration;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
@@ -7,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import io.micronaut.core.util.PathMatcher;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@MicronautTest(startApplication = false)
+@MicronautIntegrationTest
 class CsrfRegexPatternTest {
     @Inject
     CsrfFilterConfiguration csrfFilterConfiguration;
