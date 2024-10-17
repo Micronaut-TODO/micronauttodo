@@ -16,9 +16,17 @@
 package io.micronaut.security.csrf.validator;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * CsrfToken Validator
+ * @author Sergio del Amo
+ * @param <T> request
+ */
+
 @FunctionalInterface
-public interface CsrfTokenValidator {
-    boolean validate(@NonNull @NotBlank String token);
+public interface CsrfTokenValidator<T> {
+    boolean validateCsrfToken(@Nullable T request,
+                              @NonNull String token);
 }

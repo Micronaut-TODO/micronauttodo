@@ -33,8 +33,7 @@ public class FieldCsrfTokenResolver implements CsrfTokenResolver<HttpRequest<?>>
                      request.byteBody()
                              .split(ByteBody.SplitBackpressureMode.SLOWEST)
                              .allowDiscard()) {
-            try {
-                final InputStream inputStream = ourCopy.toInputStream();
+            try(InputStream inputStream = ourCopy.toInputStream()) {
                 String str = ofInputStream(inputStream);
                 return extractCsrfTokenFromAFormUrlEncodedString(str);
             } catch (IOException e) {

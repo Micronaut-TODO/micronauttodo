@@ -3,12 +3,18 @@
 @param Form form
 @param LocalizedMessageSource messageSource
 @param Form localeForm
+@param String csrfToken
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 <head>
     <title>Sign In </title>
-    @template.htmlHead()
+    @template.htmlHead(csrfToken = csrfToken)
     <link href="/assets/stylesheets/sign-in.css" rel="stylesheet">
+    <script>
+    window.onload = function() {
+        document.getElementById('username').focus();
+    };
+    </script>
 </head>
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
 @template.appearance()

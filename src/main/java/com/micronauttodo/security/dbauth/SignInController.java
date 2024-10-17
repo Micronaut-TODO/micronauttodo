@@ -24,6 +24,7 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.endpoints.LoginControllerConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.views.View;
+import io.micronaut.views.fields.FieldsetGenerator;
 import io.micronaut.views.fields.Form;
 import io.micronaut.views.fields.FormGenerator;
 import io.micronaut.views.fields.elements.InputSubmitFormElement;
@@ -42,7 +43,8 @@ class SignInController {
     private final FormGenerator formGenerator;
     private final LoginControllerConfiguration loginControllerConfiguration;
 
-    SignInController(FormGenerator formGenerator, LoginControllerConfiguration loginControllerConfiguration) {
+    SignInController(FormGenerator formGenerator,
+                     LoginControllerConfiguration loginControllerConfiguration) {
         this.formGenerator = formGenerator;
         this.loginControllerConfiguration = loginControllerConfiguration;
     }
@@ -53,6 +55,8 @@ class SignInController {
     @Get(PATH_LOGIN)
     Map<String, Object> login() {
         Form form = formGenerator.generate(loginControllerConfiguration.getPath(), LoginForm.class, INPUT_SUBMIT_LOGIN);
+        // Disable turbo for login form
+        form = new Form(form.action(), form.method(), form.fieldset(), form.enctype(), false);
         return Map.of(MODEL_LOGIN_FORM, form);
     }
 }

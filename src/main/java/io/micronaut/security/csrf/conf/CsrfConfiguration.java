@@ -16,8 +16,9 @@
 package io.micronaut.security.csrf.conf;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.Toggleable;
 
-public interface CsrfConfiguration {
+public interface CsrfConfiguration extends Toggleable {
 
     @NonNull
     String getHeaderName();

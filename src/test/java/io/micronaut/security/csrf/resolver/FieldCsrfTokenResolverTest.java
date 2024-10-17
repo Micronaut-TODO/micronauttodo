@@ -16,6 +16,7 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.csrf.repositories.CsrfRepository;
+import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -40,21 +41,15 @@ class FieldCsrfTokenResolverTest {
         HttpRequest<?> request = BrowserRequest.POST("/password/change", "username=sherlock&csrfToken=abcde&password=elementary", embeddedServer);
         String result = assertDoesNotThrow(() -> client.retrieve(request));
         assertEquals("sherlock", result);
-
     }
 
     @Requires(property = "spec.name", value = "FieldCsrfTokenResolverTest")
     @Singleton
-    @Replaces(CsrfRepository.class)
-    static class CsrfTokenRepositoryReplacement implements CsrfRepository<HttpRequest<?>> {
+    @Replaces(CsrfTokenValidator.class)
+    static class CsrfTokenValidatorReplacement implements CsrfTokenValidator<HttpRequest<?>> {
         @Override
-        public Optional<String> findCsrfToken(HttpRequest<?> request) {
-            return Optional.of("abcde");
-        }
-
-        @Override
-        public String generate(HttpRequest<?> request) {
-            return "abcde";
+        public boolean validateCsrfToken(HttpRequest<?> request, String token) {
+            return token.equals("abcde");
         }
     }
 

@@ -13,16 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.csrf.conf;
+package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.HttpMethod;
+import io.micronaut.http.MediaType;
+import io.micronaut.security.csrf.conf.CsrfConfigurationProperties;
 
+import java.util.Set;
+
+@Internal
 @ConfigurationProperties(CsrfFilterConfigurationProperties.PREFIX)
-public class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration {
+final class CsrfFilterConfigurationProperties implements CsrfFilterConfiguration {
     public static final String PREFIX = CsrfConfigurationProperties.PREFIX + ".filter";
     public static final boolean DEFAULT_BOOLEAN = true;
     private boolean enabled = DEFAULT_BOOLEAN;
     private String regexPattern = "^.*$";
+
+    private static final Set<HttpMethod> DEFAULT_METHODS = Set.of(
+            HttpMethod.POST,
+            HttpMethod.PUT,
+            HttpMethod.DELETE,
+            HttpMethod.PATCH
+    );
+    private Set<HttpMethod> methods = DEFAULT_METHODS;
+
+    private static final Set<MediaType> DEFAULT_CONTENT_TYPES = Set.of(
+            MediaType.APPLICATION_FORM_URLENCODED_TYPE,
+            MediaType.MULTIPART_FORM_DATA_TYPE
+    );
+    private Set<MediaType> contentTypes = DEFAULT_CONTENT_TYPES;
+
+    @Override
+    @NonNull
+    public Set<HttpMethod> getMethods() {
+        return methods;
+    }
+
+    public void setMethods(@NonNull Set<HttpMethod> methods) {
+        this.methods = methods;
+    }
+
+    @Override
+    @NonNull
+    public Set<MediaType> getContentTypes() {
+        return contentTypes;
+    }
+
+    public void setContentTypes(@NonNull Set<MediaType> contentTypes) {
+        this.contentTypes = contentTypes;
+    }
 
     @Override
     public boolean isEnabled() {

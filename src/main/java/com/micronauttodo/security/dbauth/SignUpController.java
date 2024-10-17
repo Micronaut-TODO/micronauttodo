@@ -60,7 +60,10 @@ class SignUpController {
     @View(VIEW_SIGNUP)
     @Get(PATH_SIGNUP)
     Map<String, Object> signup() {
-        return Map.of(MODEL_SIGNUP_FORM, formGenerator.generate(PATH_SIGNUP, SignUpForm.class, INPUT_SUBMIT_SIGN_UP));
+        Form form = formGenerator.generate(PATH_SIGNUP, SignUpForm.class, INPUT_SUBMIT_SIGN_UP);
+        // Disable turbo for sign up form
+        form = new Form(form.action(), form.method(), form.fieldset(), form.enctype(), false);
+        return Map.of(MODEL_SIGNUP_FORM, form);
     }
 
     @Produces(MediaType.TEXT_HTML)

@@ -16,6 +16,7 @@
 package io.micronaut.security.csrf.filter;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
@@ -24,52 +25,48 @@ import io.micronaut.http.*;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.annotation.ServerFilter;
 import io.micronaut.http.filter.FilterPatternStyle;
-import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
-import io.micronaut.security.csrf.conf.CsrfFilterConfigurationProperties;
-import io.micronaut.security.csrf.exceptions.InvalidCsrfTokenException;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.csrf.resolver.CsrfTokenResolver;
 import io.micronaut.security.csrf.validator.CsrfTokenValidator;
+import io.micronaut.security.filters.SecurityFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
+@Internal
 @Requires(property = CsrfFilterConfigurationProperties.PREFIX +".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Requires(classes = HttpRequest.class)
-@ServerFilter(patternStyle = FilterPatternStyle.REGEX,
-        value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:^.*$}",
-        methods = {HttpMethod.POST})
-public class CsrfTokenFilter {
+@ServerFilter(patternStyle = FilterPatternStyle.REGEX, value = "${" + CsrfFilterConfigurationProperties.PREFIX + ".regex-pattern:^.*$}")
+final class CsrfTokenFilter {
     private static final Logger LOG = LoggerFactory.getLogger(CsrfTokenFilter.class);
-    private static final String HTTP = "http://";
-    private static final String HTTPS = "https://";
-    private static final String SLASH = "/";
-
-    private final HttpHostResolver httpHostResolver;
     private final List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers;
     private final CsrfTokenValidator csrfTokenValidator;
-    private final ExceptionHandler<InvalidCsrfTokenException, MutableHttpResponse<?>> invalidCsrfTokenExceptionHandler;
+    private final ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler;
+    private final CsrfFilterConfiguration csrfFilterConfiguration;
 
-    public CsrfTokenFilter(HttpHostResolver httpHostResolver,
+    CsrfTokenFilter(CsrfFilterConfiguration csrfFilterConfiguration,
                            List<CsrfTokenResolver<HttpRequest<?>>> csrfTokenResolvers,
                            CsrfTokenValidator csrfTokenValidator,
-                           ExceptionHandler<InvalidCsrfTokenException, MutableHttpResponse<?>> invalidCsrfTokenExceptionHandler) {
-        this.httpHostResolver = httpHostResolver;
+                           ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> exceptionHandler) {
         this.csrfTokenResolvers = csrfTokenResolvers;
         this.csrfTokenValidator = csrfTokenValidator;
-        this.invalidCsrfTokenExceptionHandler = invalidCsrfTokenExceptionHandler;
+        this.exceptionHandler = exceptionHandler;
+        this.csrfFilterConfiguration = csrfFilterConfiguration;
     }
 
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @RequestFilter
     @Nullable
-    public HttpResponse<?> csrfFilter(HttpRequest<?> request) {
-        if (!validateHeaders(request)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Request rejected by the {} because the header validation failed", this.getClass().getSimpleName());
-            }
-            return unauthorized(request);
+    public HttpResponse<?> csrfFilter(@NonNull HttpRequest<?> request) {
+        if (!shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(request)) {
+            return null;
+        }
+        if (!shouldTheFilterProcessTheRequestAccordingToTheContentType(request)) {
+            return null;
         }
         if (!validateCsrfToken(request)) {
             if (LOG.isDebugEnabled()) {
@@ -80,68 +77,63 @@ public class CsrfTokenFilter {
         return null;
     }
 
+    private boolean shouldTheFilterProcessTheRequestAccordingToTheContentType(@NonNull HttpRequest<?> request) {
+        if (request.getContentType().isPresent() && csrfFilterConfiguration.getContentTypes().stream().noneMatch(method -> method.equals(request.getContentType().get()))) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Request {} {} with content type {} is not processed by the CSRF filter. CSRF filter only processes Content Types: {}",
+                        request.getMethod(),
+                        request.getPath(),
+                        request.getContentType().get(),
+                        csrfFilterConfiguration.getContentTypes().stream().map(MediaType::toString).toList());
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private boolean shouldTheFilterProcessTheRequestAccordingToTheHttpMethod(@NonNull HttpRequest<?> request) {
+        if (csrfFilterConfiguration.getMethods().stream().noneMatch(method -> method.equals(request.getMethod()))) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Request {} {} not processed by the CSRF filter. CSRF filter only processes HTTP Methods: {}",
+                        request.getMethod(),
+                        request.getPath(),
+                        csrfFilterConfiguration.getMethods().stream().map(HttpMethod::name).toList());
+            }
+            return false;
+        }
+        return true;
+    }
+
     @Nullable
-    private boolean validateCsrfToken(HttpRequest<?> request) {
+    private String resolveCsrfToken(@NonNull HttpRequest<?> request) {
         String csrfToken = null;
         for (CsrfTokenResolver<HttpRequest<?>> tokenResolver : csrfTokenResolvers) {
             Optional<String> tokenOptional = tokenResolver.resolveToken(request);
             if (tokenOptional.isPresent()) {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("CSRF token resolved via {}", tokenResolver.getClass().getSimpleName());
+                }
                 csrfToken = tokenOptional.get();
                 break;
             }
         }
+        return csrfToken;
+    }
+
+    private boolean validateCsrfToken(@NonNull HttpRequest<?> request) {
+        String csrfToken = resolveCsrfToken(request);
         if (csrfToken == null) {
+            LOG.trace("No CSRF token found in request");
             return false;
         }
-        return csrfTokenValidator.validate(csrfToken);
+        return csrfTokenValidator.validateCsrfToken(request, csrfToken);
     }
 
-    private HttpResponse<?> unauthorized(HttpRequest<?> request) {
-        return invalidCsrfTokenExceptionHandler.handle(request, new InvalidCsrfTokenException());
-    }
-
-    boolean validateHeaders(HttpRequest<?> request) {
-        return true;
-        //String host = httpHostResolver.resolve(request);
-        //List<String> validateLocations = List.of(host);
-        //return validateHeaders(validateLocations, request.getHeaders(), request.getMethod());
-    }
-
-    private boolean validateHeaders(@NonNull List<String> validLocations,
-                                    @NonNull HttpHeaders headers,
-                                    @NonNull HttpMethod method) {
-        String origin = headers.get(HttpHeaders.ORIGIN);
-        String referer = cleanupReferer(headers.get(HttpHeaders.REFERER));
-        if (method == HttpMethod.POST) {
-            return referer != null && origin != null && validLocations.contains(referer) && validLocations.contains(origin);
-        }
-        if (method == HttpMethod.GET) {
-            return referer != null && validLocations.contains(referer);
-        }
-        return false;
-    }
-
-    private String cleanupReferer(String referer) {
-        if (referer != null) {
-            boolean http = false;
-            boolean https = false;
-            if (referer.startsWith(HTTP)) {
-                http = true;
-                referer = referer.replaceAll(HTTP, "");
-            } else if (referer.startsWith(HTTPS)) {
-                https = true;
-                referer = referer.replaceAll(HTTPS, "");
-            }
-            int index = referer.indexOf(SLASH);
-            if (index != -1) {
-                referer = referer.substring(0, index);
-            }
-            if (https) {
-                referer = HTTPS + referer;
-            } else if (http) {
-                referer = HTTP + referer;
-            }
-        }
-        return referer;
+    @NonNull
+    private HttpResponse<?> unauthorized(@NonNull HttpRequest<?> request) {
+        Authentication authentication = request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class)
+                .orElse(null);
+        return exceptionHandler.handle(request,
+                new AuthorizationException(authentication));
     }
 }

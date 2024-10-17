@@ -1,8 +1,7 @@
 package com.micronauttodo.security;
 
 import com.micronauttodo.MicronautIntegrationTest;
-import io.micronaut.security.csrf.conf.CsrfFilterConfiguration;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.security.csrf.filter.CsrfFilterConfiguration;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import io.micronaut.core.util.PathMatcher;

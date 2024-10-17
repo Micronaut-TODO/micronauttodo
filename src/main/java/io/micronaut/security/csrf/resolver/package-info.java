@@ -13,4 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * CSRF Token Resolution.
+ * @author Sergio del Amo
+ */
 package io.micronaut.security.csrf.resolver;

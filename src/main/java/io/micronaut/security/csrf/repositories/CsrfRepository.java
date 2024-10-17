@@ -19,16 +19,11 @@ import java.util.Optional;
 
 /**
  * @author Sergio del Amo
- * @since XXXX
+ * @since 4.11.0
  * @param <T> request
  */
+@FunctionalInterface
 public interface CsrfRepository<T> {
 
     Optional<String> findCsrfToken(T request);
-
-    String generate(T request);
-
-    default String findOrGenerateCsrfToken(T request) {
-        return findCsrfToken(request).orElse(generate(request));
-    }
 }

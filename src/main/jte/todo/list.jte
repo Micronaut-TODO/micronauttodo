@@ -6,36 +6,22 @@
 @param Form localeForm
 @param String csrfToken
 @param LocalizedMessageSource messageSource
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-      <meta name="csrf-token" content="${csrfToken}">
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>TODOs</title>
-      <link rel="stylesheet" type="text/css" href="/assets/stylesheets/bootstrap-5.3.3-dist/bootstrap.css">
-      <script type="module">
-          import * as Turbo from '/assets/javascripts/turbo8.0.4/turbo.min.js';
-      </script>
-      <script>
-          window.onload = function() {
-              document.getElementById('item').focus();
-          };
-      </script>
-      <script type="module">
-          import {Application, Controller} from "/assets/javascripts/stimulus-3.2.1.js"
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <title>${messageSource.getMessageOrDefault("todo.title", "Todos")}</title>
+    @template.htmlHead(csrfToken = csrfToken)
+    <script>
+        window.onload = function() {
+            document.getElementById('item').focus();
+        };
+    </script>
+</head>
+<body class="bg-body-tertiary">
+@template.appearance()
+@template.locale(localeForm = localeForm, messageSource = messageSource)
 
-          window.Stimulus = Application.start()
-
-          Stimulus.register("reset-form", class extends Controller {
-              reset() {
-                  this.element.reset()
-              }
-          })
-      </script>
-  </head>
-  <body>
-  @template.nav(localeForm = localeForm, csrfToken = csrfToken)
+@template.nav(csrfToken = csrfToken)
   <div class="container">
   <ul id="todoList" class="list-group mt-3">
   @for(Todo todo : todos)
@@ -49,7 +35,7 @@
           <button type="submit" class="btn btn-primary">${messageSource != null ? messageSource.getMessageOrDefault("default.button.create.label", "Add") : "Add"}</button>
       </form>
   </div>
-  <script type="text/javascript" src="/assets/javascripts/app.js"></script>
-  <script type="text/javascript" src="/assets/javascripts/bootstrap-5.3.3-dist/bootstrap.bundle.min.js" />
-  </body>
+
+@template.htmlBodyScript()
+</body>
 </html>

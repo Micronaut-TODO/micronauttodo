@@ -20,9 +20,7 @@ public class CsrfTokenViewModelProcessor extends MapViewModelProcessor {
 
     @Override
     protected void populateModel(HttpRequest<?> request, Map<String, Object> viewModel) {
-        request.getAttribute(SecurityFilter.AUTHENTICATION, Authentication.class)
-                .ifPresent(authentication ->
-                        viewModel.putIfAbsent(MODEL_CSRF_TOKEN, csrfRepository.findOrGenerateCsrfToken(request))
-                );
+        csrfRepository.findCsrfToken(request)
+                .ifPresent(csrfToken -> viewModel.put(MODEL_CSRF_TOKEN, csrfToken));
     }
 }

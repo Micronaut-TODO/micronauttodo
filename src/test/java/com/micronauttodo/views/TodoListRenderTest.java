@@ -37,7 +37,7 @@ class TodoListRenderTest {
                 "messageSource", messageSource,
                 "localeForm", formGenerator.generate("/locale", LocaleForm.class)), null);
         String html = WritableUtils.writableToString(writable);
-        AssertionUtils.assertHtmlContains(LOG, html, "<!DOCTYPE html>");
+        AssertionUtils.assertHtmlContains(LOG, html, "<!doctype html>");
         AssertionUtils.assertHtmlContains(LOG, html, "Learn about GraalVM");
     }
 

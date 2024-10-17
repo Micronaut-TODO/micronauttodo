@@ -15,8 +15,10 @@
  */
 package com.micronauttodo.security.dbauth;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -27,6 +29,7 @@ import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 
+@Requires(property = "datasources.default.enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Singleton
 class DbAuthenticationProvider<B> implements HttpRequestExecutorAuthenticationProvider<B> {
     public static final String ATTRIBUTE_EMAIL = "email";
