@@ -32,6 +32,7 @@ dependencies {
 
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.security:micronaut-security-csrf")
     implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
 
