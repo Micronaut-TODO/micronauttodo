@@ -7,7 +7,7 @@ import io.micronaut.security.csrf.validator.CsrfTokenValidator;
 import jakarta.inject.Singleton;
 import java.util.List;
 
-@Singleton
+//@Singleton
 @Primary
 public class CompositeCsrfTokenValidator implements CsrfTokenValidator<HttpRequest<?>> {
     private final List<CsrfTokenValidator<HttpRequest<?>>> validators;

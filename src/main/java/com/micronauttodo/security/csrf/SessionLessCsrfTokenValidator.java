@@ -11,7 +11,7 @@ import jakarta.inject.Singleton;
 
 import java.net.Authenticator;
 
-@Singleton
+//@Singleton
 class SessionLessCsrfTokenValidator implements CsrfTokenValidator<HttpRequest<?>> {
     private final CsrfTokenEntityCrudRepository csrfTokenEntityCrudRepository;
 

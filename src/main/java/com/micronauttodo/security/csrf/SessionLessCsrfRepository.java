@@ -13,7 +13,7 @@ import jakarta.inject.Singleton;
 import java.net.Authenticator;
 import java.util.Optional;
 
-@Singleton
+//@Singleton
 class SessionLessCsrfRepository implements CsrfTokenRepository<HttpRequest<?>> {
     private final CsrfTokenEntityCrudRepository repository;
     private final CsrfTokenGenerator<HttpRequest<?>> csrfTokenGenerator;
