@@ -15,6 +15,7 @@
  */
 package com.micronauttodo.security.dbauth;
 
+import io.micronaut.bootstrap.Alert;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
@@ -35,6 +36,7 @@ import java.util.Map;
 @Controller
 class SignInController {
     public static final String PATH_LOGIN = "/security/login";
+    public static final String PATH_LOGIN_FAILED = "/security/login/failed";
     private static final @NonNull Message MESSAGE_LOG_IN = Message.of("Sign in", "loginform.submit");
     private static final @NonNull InputSubmitFormElement INPUT_SUBMIT_LOGIN = InputSubmitFormElement.builder().value(MESSAGE_LOG_IN).build();
     public static final String MODEL_LOGIN_FORM = "form";
@@ -58,5 +60,17 @@ class SignInController {
         // Disable turbo for login form
         form = new Form(form.action(), form.method(), form.fieldset(), form.enctype(), false);
         return Map.of(MODEL_LOGIN_FORM, form);
+    }
+
+    @Produces(MediaType.TEXT_HTML)
+    @Secured(SecurityRule.IS_ANONYMOUS)
+    @View(VIEW_SECURITY_FORM)
+    @Get(PATH_LOGIN_FAILED)
+    Map<String, Object> loginFailed() {
+        Form form = formGenerator.generate(loginControllerConfiguration.getPath(), LoginForm.class, INPUT_SUBMIT_LOGIN);
+        // Disable turbo for login form
+        form = new Form(form.action(), form.method(), form.fieldset(), form.enctype(), false);
+        return Map.of(MODEL_LOGIN_FORM, form,
+                "alert", Alert.danger(Message.of("Invalid username or password")));
     }
 }

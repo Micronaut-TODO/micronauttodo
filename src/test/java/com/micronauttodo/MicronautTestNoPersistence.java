@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 @MicronautTest
 @Property(name = "datasources.default.enabled", value = StringUtils.FALSE)
+@Property(name = "micronaut.security.csrf.filter.enabled", value = StringUtils.FALSE)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface MicronautTestNoPersistence {

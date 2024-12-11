@@ -120,6 +120,16 @@ tasks.jacocoTestReport {
         csv.required = false
         html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
+    // Adjust the classDirectories to exclude the desired package
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    exclude("gg/jte/generated/**")
+                }
+            }
+        )
+    )
 }
 tasks.jacocoTestCoverageVerification {
     enabled = true

@@ -12,11 +12,13 @@ To run tests, execute the gradle task:
 
 ## Local Development
 
+When you run the app locally, it will run in the `dev` environment. 
 
+Create a file `src/main/main/resources/application-dev.properties` with the following content: 
 
-## JIT 
-
-
+```properties
+micronaut.security.csrf.signature-key=pleaseChangeThisSecretForANewOnekoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow
+```
 
 ### Test Coverage
 

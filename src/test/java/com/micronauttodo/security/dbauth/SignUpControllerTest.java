@@ -38,4 +38,16 @@ class SignUpControllerTest {
         assertEquals(1 + count, userCrudRepository.count());
         userCrudRepository.deleteAll();
     }
+
+    @Test
+    void notMatchingPasswordSignupPost(@Client("/") HttpClient httpClient, UserCrudRepository userCrudRepository) {
+        BlockingHttpClient client = httpClient.toBlocking();
+        String email = "admin@example.com";
+        String password = "admin123";
+        HttpRequest<?> request = BrowserRequest.POST("/security/signup", Map.of("email", email, "password", password, "repeatPassword", "foobar"));
+        long count = userCrudRepository.count();
+        assertDoesNotThrow(() -> client.exchange(request));
+        assertEquals(count, userCrudRepository.count());
+        userCrudRepository.deleteAll();
+    }
 }

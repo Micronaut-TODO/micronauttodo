@@ -21,4 +21,12 @@ class SignInControllerTest {
 
     }
 
+    @Test
+    void loginFailed(@Client("/")HttpClient httpClient) {
+        BlockingHttpClient client = httpClient.toBlocking();
+        String html = assertDoesNotThrow(() -> client.retrieve(BrowserRequest.GET("/security/login/failed")));
+        assertNotNull(html);
+
+    }
+
 }
