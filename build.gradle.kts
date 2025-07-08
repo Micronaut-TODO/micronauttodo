@@ -1,9 +1,9 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.4.4"
+    id("io.micronaut.application") version "4.5.4"
     id("gg.jte.gradle") version "3.1.12"
-    id("io.micronaut.test-resources") version "4.4.4"
-    id("io.micronaut.aot") version "4.4.4"
+    id("io.micronaut.test-resources") version "4.5.4"
+    id("io.micronaut.aot") version "4.5.4"
     id("org.sonatype.gradle.plugins.scan") version "2.8.3"
     jacoco
 }
