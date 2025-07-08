@@ -52,7 +52,7 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
 
     // database authentication
-    implementation("org.springframework.security:spring-security-crypto:6.2.0")
+    implementation("org.springframework.security:spring-security-crypto:6.5.1")
     implementation("org.slf4j:jcl-over-slf4j")
 
     jteGenerate("gg.jte:jte-native-resources:3.1.12")
