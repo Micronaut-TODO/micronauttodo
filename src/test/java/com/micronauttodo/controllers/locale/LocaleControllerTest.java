@@ -16,8 +16,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Property(name = "micronaut.http.client.follow-redirects", value = StringUtils.FALSE)
 @MicronautTestNoPersistence
+@Property(name = "micronaut.http.client.follow-redirects", value = StringUtils.FALSE)
 class LocaleControllerTest {
 
     @Test

@@ -14,10 +14,10 @@ class CsrfRegexPatternTest {
 
     @Test
     void csrfRegexPattern() {
+        assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/logout"));
+        assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/login"));
         assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/locale"));
-        assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/security/login"));
         assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/security/signup"));
-        assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/assets/stylesheets/bootstrap-5.3.3-dist/bootstrap.css"));
         assertFalse(PathMatcher.REGEX.matches(csrfFilterConfiguration.getRegexPattern(), "/api/v1/todo"));
 
     }

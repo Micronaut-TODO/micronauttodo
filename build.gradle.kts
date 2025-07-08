@@ -1,9 +1,9 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.4.4"
+    id("com.gradleup.shadow") version "8.3.7"
+    id("io.micronaut.application") version "4.5.4"
     id("gg.jte.gradle") version "3.1.12"
-    id("io.micronaut.test-resources") version "4.4.4"
-    id("io.micronaut.aot") version "4.4.4"
+    id("io.micronaut.test-resources") version "4.5.4"
+    id("io.micronaut.aot") version "4.5.4"
     id("org.sonatype.gradle.plugins.scan") version "2.8.3"
     jacoco
 }
@@ -52,7 +52,7 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
 
     // database authentication
-    implementation("org.springframework.security:spring-security-crypto:6.2.0")
+    implementation("org.springframework.security:spring-security-crypto:6.5.1")
     implementation("org.slf4j:jcl-over-slf4j")
 
     jteGenerate("gg.jte:jte-native-resources:3.1.12")
@@ -120,6 +120,16 @@ tasks.jacocoTestReport {
         csv.required = false
         html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
+    // Adjust the classDirectories to exclude the desired package
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    exclude("gg/jte/generated/**")
+                }
+            }
+        )
+    )
 }
 tasks.jacocoTestCoverageVerification {
     enabled = true

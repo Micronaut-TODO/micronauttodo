@@ -1,6 +1,7 @@
 package com.micronauttodo.controllers.api.v1;
 
 import com.micronauttodo.domains.Todo;
+import com.micronauttodo.repositories.TodoCrudRepository;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.StringUtils;
@@ -28,12 +29,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @MicronautTest
 class V1TodoControllerTest {
     @Test
-    void crud(@Client("/") HttpClient httpClient) {
+    void crud(@Client("/") HttpClient httpClient, TodoCrudRepository todoCrudRepository) {
         String userA = "sdelamo";
         String userB = "thomas";
         BlockingHttpClient client = httpClient.toBlocking();
         String path = "/api/v1/todo";
 
+        long count = todoCrudRepository.count();
         // SAVE
         String bodyJson = "{\"item\":\"Learn about GraalVM\"}";
         HttpRequest<?> saveRequestUnauthorized = HttpRequest.POST(path, bodyJson);
@@ -68,7 +70,7 @@ class V1TodoControllerTest {
         assertEquals(HttpStatus.OK, listResponseUserB.status());
         todos = listResponseUserB.body();
         assertNotNull(todos);
-        assertEquals(1, todos.size());
+        assertEquals(count + 1, todos.size());
         assertTrue(todos.stream().anyMatch(t -> t.item().equals("Learn about Micronaut")));
 
         // SHOW
